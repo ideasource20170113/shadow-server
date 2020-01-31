@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% block title %}CatChat{% endblock %}
+
+{% block content %}
+    <div class="terminal-main">
+        <div class="terminal">
+            <pre class="terminal-text">{{ agent.output }}</pre>
+            <div class="input-shell">
+                <span class="jquery-console-prompt-label" id="{{ agent.id }}">root# </span>
+                <label>
+                    <input class="console-input" type="text" id="console-input">&nbsp;
+                    <span class="console-cursor"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript">
+        let socket = io('/web');
+        $(document).ready(function () {
+            socket.on('connect', function () {
+                socket.emit('joined', {
+                    'agent_id': $('.jquery-console-prompt-label').attr('id')
+                });
+            });
+            socket.on('command', function (data) {
+                $('.terminal-text').append('\r\n' + data);
+            });
+            socket.on('status', function (data) {
+                $('.terminal-text').append('\r\n' + '<' + data.msg + '>');
+            });
+            socket.on('upload', function (data) {
+                $('.terminal-text').append('\r\n' + data);
+            });
+            $(window).on('beforeunload', function () {
+                socket.emit('left', {
+                    'agent_id': $('.jquery-console-prompt-label').attr('id')
+                });
+                window.location.href = "{{ url_for('agent.home') }}";
+            });
+        });
+    </script>
+    <script>
+        $(function () {
+
+            // list of the last commands
+            var commandHistory = [];
+
+            // max number of remembered commands
+            var COMMAND_HISTORY_MAX_SIZE = 100;
+
+            // index of the command displayed in the input field
+            var currentHistoryIndex = -1;
+
+
+            function addComandToHistory(cmd) {
+                commandHistory.push(cmd);
+
+                if (commandHistory.length > COMMAND_HISTORY_MAX_SIZE) {
+                    commandHistory.splice(0, 1);
+                }
+
+                currentHistoryIndex = commandHistory.length;
+            }
+
+            $("#console-input").keypress(function (e) {
+                onCommandKeypressedAction(e);
+            });
+
+            function onCommandKeypressedAction(e) {
+                var displayValue = '';
+
+                if (e.keyCode === 13) { // ENTER
+                    sendCommand();
+                } else if (e.keyCode == 38) { // KEY_UP
+                    if (currentHistoryIndex > 0) {
+                        currentHistoryIndex--;
+                        $('#cmd').val(commandHistory[currentHistoryIndex]);
+                    }
+                } else if (e.keyCode == 40) { // KEY_DOWN
+                    if (currentHistoryIndex < commandHistory.length) {
+                        currentHistoryIndex++;
+                        displayValue = (currentHistoryIndex == commandHistory.length) ? '' : commandHistory[currentHistoryIndex];
+                        $('#cmd').val(commandHistory[currentHistoryIndex]);
+                    }
+                }
+
+                return false;
+            }
+
+            function sendCommand() {
+                socket.emit('command',
+                    {
+                        'agent_id': $('.jquery-console-prompt-label').attr('id'),
+                        'command': $('#console-input').val(),
+                    });
+                $('#console-input').val('');
+            }
+        })
+
+    </script>
+{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    <style>
+
+    </style>
+{% endblock styles %}

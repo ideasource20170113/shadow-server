@@ -1,0 +1,43 @@
+<div class="msg-box">
+    {% if current_user.is_authenticated %}
+        <table class="ui table">
+            <thead>
+            <tr>
+                <th>id</th>
+                <th>最后登录</th>
+                <th>用户名</th>
+                <th>主机名</th>
+                <th>远程IP</th>
+                <th>系统名称</th>
+                <th>地理位置</th>
+                <th>修改名称</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for agent in agents %}
+
+                <tr>
+                    <td><a href="{{ url_for('agent.agent_detail', agent_id=agent.id) }}">{{ agent.display_name }}</a>
+                    </td>
+                    <td>
+                        {% if agent.last_online %}
+                            {% if agent.is_online() %}
+                                ONLINE
+                            {% else %}
+                                {{ agent.last_online.strftime('%Y/%m/%d %H:%M') }}
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    <td>{{ agent.username }}</td>
+                    <td>{{ agent.hostname }}</td>
+                    <td>{{ agent.remote_ip }}</td>
+                    <td>{{ agent.operating_system }}</td>
+                    <td>{{ agent.geolocation }}</td>
+                    <td>change name</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>

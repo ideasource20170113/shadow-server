@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}CatChat{% endblock %}
+
+{% block content %}
+<div class="pusher">
+        <div class="chat-box">
+            <div class="messages">
+
+            </div>
+        </div>
+        <div class="input-area">
+            <div class="ui grid form">
+                <div class="ten wide column">
+                    <div class="field fluid message-box">
+                        {% if current_user.is_authenticated %}
+                            <div class="ui floating message">欢迎登陆
+                            </div>
+                        {% else %}
+                            <div class="ui floating message">Please <a href="{{ url_for('auth.login') }}">Sign in</a> or
+                                <a href="{{ url_for('auth.register') }}">Sign up</a> to send message.
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="four wide column right floated right aligned hide-on-mobile">
+                    <p>Written by <a href="http://sunyue.co">Sun</a><br>
+                        Fork me on <a href="https://github.com/ideasource20170113">GitHub</a><br>
+                        2017 © <a href="https://sunyue.co">sunyue.co</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript">
+        var socket = io('/');
+    </script>
+{% endblock %}
