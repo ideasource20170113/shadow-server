@@ -73,18 +73,3 @@ def register_commands(app):
             click.echo('Drop tables.')
         db.create_all()
         click.echo('Initialized database.')
-
-    @app.cli.command()
-    @click.option('--message', default=300, help='Quantity of messages, default is 300.')
-    def forge():
-
-        click.echo('Initializing the database...')
-        db.drop_all()
-        db.create_all()
-
-        click.echo('Forging the data...')
-        admin = User(nickname='Sun', email='ideasource@foxmail.com')
-        admin.set_password('sunyue2332030')
-        db.session.add(admin)
-        db.session.commit()
-        click.echo('Done.')
