@@ -67,18 +67,27 @@ body {
     padding: 5px;
 }
 
-.header .nav {
+.header .nav, .header .help {
     position: relative;
-    float: left;
     width: 200px;
     height: 40px;
-    line-height: 40px;
     background-color: #0071ce;
     text-align: center;
-    font-size: 12px;
     z-index: 1;
+    border: none;
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    outline:none;
+    cursor: pointer;
 }
-
+.header .nav {
+    float: left;
+}
+.header .help {
+    float: right;
+}
 .input-shell {
     margin-bottom: 20px;
 }

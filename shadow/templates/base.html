@@ -45,7 +45,7 @@
 {% block nav %}
     <div class="ui top fixed borderless menu">
         <a class="item shadow" href="{{ url_for('layout.home') }}">
-            <img src="{{ url_for('static', filename='logo.png') }}">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="shadow">
             <span>Shadow</span>
         </a>
         <div class="item">
@@ -145,7 +145,7 @@
     <div class="header">Create code or text snippets</div>
     <div class="content">
         <div class="ui form">
-            <textarea id="snippet-textarea" rows="20"></textarea>
+            <label for="snippet-textarea"></label><textarea id="snippet-textarea" rows="20"></textarea>
         </div>
     </div>
     <div class="actions">
