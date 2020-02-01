@@ -15,11 +15,7 @@ class User(UserMixin, db.Model):
     nickname = db.Column(db.String(30))
     password_hash = db.Column(db.String(128))
     email_hash = db.Column(db.String(128))
-    github = db.Column(db.String(255))
-    website = db.Column(db.String(255))
-    bio = db.Column(db.String(120))
 
-    messages = db.relationship('Message', back_populates='author', cascade='all')
     agents = db.relationship('Agent', back_populates='user', cascade='all')
 
     def __init__(self, **kwargs):
@@ -39,28 +35,6 @@ class User(UserMixin, db.Model):
     @property
     def is_admin(self):
         return self.email == current_app.config['SHADOW_ADMIN_EMAIL']
-
-    @property
-    def gravatar(self):
-        return 'https://gravatar.com/avatar/%s?d=monsterid' % self.email_hash
-
-
-class Guest(AnonymousUserMixin):
-
-    @property
-    def is_admin(self):
-        return False
-
-
-login_manager.anonymous_user = Guest
-
-
-class Message(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    body = db.Column(db.Text, nullable=False)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
-    author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    author = db.relationship('User', back_populates='messages')
 
 
 class Agent(db.Model):

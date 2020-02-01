@@ -6,11 +6,8 @@ from flask_wtf.csrf import CSRFError
 
 from shadow.blueprints.auth import auth_bp
 from shadow.blueprints.agent import agent_bp
-from shadow.blueprints.api import api
 from shadow.blueprints.socketio import socketio_bp
-# from shadow.blueprints.oauth import oauth_bp
 from shadow.extensions import db, login_manager, csrf, socketio
-from shadow.models import User
 from shadow.config import config
 
 
@@ -39,9 +36,7 @@ def register_extensions(app):
 def register_blueprints(app):
     app.register_blueprint(auth_bp)
     app.register_blueprint(agent_bp)
-    app.register_blueprint(api)
     app.register_blueprint(socketio_bp)
-    # app.register_blueprint(oauth_bp)
 
 
 def register_errors(app):

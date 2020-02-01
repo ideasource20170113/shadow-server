@@ -3,7 +3,6 @@ name = "pypi"
 url = "https://pypi.tuna.tsinghua.edu.cn/simple"
 verify_ssl = true
 
-[dev-packages]
 
 [packages]
 flask = "*"
@@ -16,4 +15,4 @@ requests = "*"
 
 
 [requires]
-python_version = "3.8"
+python_version = "3.7"

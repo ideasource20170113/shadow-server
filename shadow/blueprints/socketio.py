@@ -13,47 +13,28 @@ from shadow.models import Agent, db
 socketio_bp = Blueprint('socketio', __name__)
 
 
+# 接收 web 客户端连接事件
 @socketio.on('connect', namespace='/web')
 def web_connect():
     print('web connect...')
 
 
+# 接收 web 客户端加入事件
 @socketio.on('joined', namespace='/web')
 def joined(message_body):
     print('有新客户端连接：' + message_body['agent_id'])
     room = message_body['agent_id']
     join_room(room)
-
     emit('status', {'msg': str(message_body['agent_id']) + ' has entered the room.'}, room=room)
 
 
+# 接收 web 客户端断开事件
 @socketio.on('left', namespace='/web')
 def leave(message_body):
     print('有客户端失去连接：' + message_body['agent_id'])
 
 
-@socketio.on('command', namespace='/web')
-def get_command(message_body):
-    print('client agent id：' + message_body['agent_id'])
-    print('client agent command：' + message_body['command'])
-    cmd = message_body['command']
-    room = message_body['agent_id']
-
-    result_cmd = 'root# ' + cmd
-
-    emit('command', result_cmd, room=room)
-    put_command(cmd, room)
-
-
-def put_command(cmd, room):
-    print('正在将消息转送到 /api ...')
-    emit('command', {
-        'cmd': cmd,
-        'room': room
-    }, namespace='/api', room=room)
-    print('消息转发完毕')
-
-
+# 接收 agent 客户端心跳并响应
 @socketio.on('hello', namespace='/api')
 def hello(message_body):
     print('收到心跳包，来自 agent id：' + message_body['id'])
@@ -88,6 +69,31 @@ def hello(message_body):
     }, room=room)
 
 
+# 接收 web 客户端 command 事件
+@socketio.on('command', namespace='/web')
+def get_command(message_body):
+    print('client agent id：' + message_body['agent_id'])
+    print('client agent command：' + message_body['command'])
+    cmd = message_body['command']
+    room = message_body['agent_id']
+
+    result_cmd = 'root# ' + cmd
+
+    emit('command', result_cmd, room=room)
+    put_command(cmd, room)
+
+
+# 转发 web 客户端 command 事件
+def put_command(cmd, room):
+    print('正在将消息转送到 /api ...')
+    emit('command', {
+        'cmd': cmd,
+        'room': room
+    }, namespace='/api', room=room)
+    print('消息转发完毕')
+
+
+# 收发 web 客户端 command 事件
 @socketio.on('command', namespace='/api')
 def api_command(message_body):
     print('server agent message：')
@@ -95,12 +101,13 @@ def api_command(message_body):
     emit('command', message_body['output'], namespace='/web', room=message_body['room'])
 
 
+# 上传
 @socketio.on('upload', namespace='/api')
 def upload(message_body):
     agent_id = message_body['room']
     filename = message_body['file']
     data = message_body['data']
-    print('收到客户端截图响应 agent id：' + agent_id)
+    print('收到客户端上传响应 agent id：' + agent_id)
     upload_dir = os.path.join(current_app.config['UPLOAD_FOLDER'])
     agent_dir = agent_id
     store_dir = os.path.join(upload_dir, agent_id)
