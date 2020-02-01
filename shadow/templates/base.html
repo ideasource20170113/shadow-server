@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="{{ url_for('static', filename='logo.png') }}">
         {% block styles %}
+            <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
             <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
             <link rel="stylesheet" href="{{ url_for('static', filename='semantic-ui/semantic.min.css') }}">
             <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
@@ -15,7 +16,7 @@
 
 <div class="ui labeled icon right vertical inverted demo menu sidebar">
     {% if current_user.is_authenticated %}
-        <a class="item" href="{{ url_for('agent.agent_list') }}">
+        <a class="item" href="{{ url_for('agent.home') }}">
             <i class="home icon"></i>
             Agent
         </a>
@@ -43,7 +44,7 @@
 
 {% block nav %}
     <div class="ui top fixed borderless menu">
-        <a class="item shadow" href="{{ url_for('agent.home') }}">
+        <a class="item shadow" href="{{ url_for('layout.home') }}">
             <img src="{{ url_for('static', filename='logo.png') }}">
             <span>Shadow</span>
         </a>

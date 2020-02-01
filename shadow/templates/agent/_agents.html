@@ -7,10 +7,10 @@
                 <th>最后登录</th>
                 <th>用户名</th>
                 <th>主机名</th>
-                <th>远程IP</th>
+                <th>IP地址</th>
                 <th>系统名称</th>
                 <th>地理位置</th>
-                <th>修改名称</th>
+                <th>操作</th>
             </tr>
             </thead>
             <tbody>
@@ -18,7 +18,7 @@
             {% for agent in agents %}
 
                 <tr>
-                    <td><a href="{{ url_for('agent.agent_detail', agent_id=agent.id) }}">{{ agent.display_name }}</a>
+                    <td><a href="{{ url_for('agent.agent_console', agent_id=agent.id) }}">{{ agent.display_name }}</a>
                     </td>
                     <td>
                         {% if agent.last_online %}
@@ -34,7 +34,19 @@
                     <td>{{ agent.remote_ip }}</td>
                     <td>{{ agent.operating_system }}</td>
                     <td>{{ agent.geolocation }}</td>
-                    <td>change name</td>
+
+                        {% if agent.last_online %}
+                            {% if agent.is_online() %}
+                                <td>
+                                    <a href="{{ url_for('agent.agent_console', agent_id=agent.id) }}">登录</a>&nbsp;&nbsp;
+                                    <a href="{{ url_for('agent.agent_console', agent_id=agent.id) }}">远程</a>&nbsp;&nbsp;
+                                    <a href="{{ url_for('agent.agent_console', agent_id=agent.id) }}">更多</a>
+                                </td>
+                            {% else %}
+                                <td class="disabled">登录</td>
+                            {% endif %}
+                        {% endif %}
+
                 </tr>
             {% endfor %}
             </tbody>

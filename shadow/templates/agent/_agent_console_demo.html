@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}CatChat{% endblock %}
+{% block title %}Shadow{% endblock %}
 
 {% block content %}
     <div class="terminal-main">
@@ -31,7 +31,7 @@
                 $('.terminal-text').append('\r\n' + data);
             });
             socket.on('status', function (data) {
-                $('.terminal-text').append('\r\n' + '<' + data.msg + '>');
+                $('.terminal-text').append("<li>"+ '\r\n' + '<' + data.msg + '>');
             });
             socket.on('upload', function (data) {
                 $('.terminal-text').append('\r\n' + data);

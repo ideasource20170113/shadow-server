@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Shadow Cloud webshell - {{ agent.ip }}</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <style>
+        body {
+            background: #000;
+        }
+    </style>
+</head>
+
+<body>
+<div id="container">
+    <div style="height:100%;">
+        <div id="toolbar-container">
+            <div class="header" style="z-index:999;">
+                <a class="nav" href="javascript:void(0);" id="clearTerminal">
+                    <span>清理终端</span>
+                </a>
+            </div>
+        </div>
+        <div id="terminal-container">
+            <div class="terminal-main">
+                <div class="terminal">
+                    <div class="terminal-text">
+                        <span id="join-room"></span>
+                        <pre>{{ agent.output }}</pre>
+                        <div class="input-shell">
+                            <span class="jquery-console-prompt-label" id="{{ agent.id }}">root# </span>
+                            <label>
+                                <input class="console-input" type="text" id="console-input">&nbsp;
+                                <span class="console-cursor"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/socket.io.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

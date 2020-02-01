@@ -4,6 +4,7 @@ import click
 from flask import Flask, render_template
 from flask_wtf.csrf import CSRFError
 
+from shadow.blueprints.layout import layout_bp
 from shadow.blueprints.auth import auth_bp
 from shadow.blueprints.agent import agent_bp
 from shadow.blueprints.socketio import socketio_bp
@@ -34,6 +35,7 @@ def register_extensions(app):
 
 
 def register_blueprints(app):
+    app.register_blueprint(layout_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(agent_bp)
     app.register_blueprint(socketio_bp)
