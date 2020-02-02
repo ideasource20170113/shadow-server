@@ -39,7 +39,7 @@
                             {% if agent.is_online() %}
                                 <td>
                                     <a href="{{ url_for('agent.agent_console', agent_id=agent.id) }}">登录</a>&nbsp;&nbsp;
-                                    <a href="{{ url_for('agent.agent_console', agent_id=agent.id) }}">远程</a>&nbsp;&nbsp;
+                                    <a href="{{ url_for('agent.agent_monitor', agent_id=agent.id) }}">远程</a>&nbsp;&nbsp;
                                     <a href="{{ url_for('agent.agent_console', agent_id=agent.id) }}">更多</a>
                                 </td>
                             {% else %}

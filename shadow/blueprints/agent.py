@@ -13,12 +13,20 @@ def home():
     return render_template('agent/home.html', agents=agents)
 
 
-@agent_bp.route('/shell/<agent_id>/')
+@agent_bp.route('/shell/<agent_id>')
 def agent_console(agent_id):
     agent = Agent.query.get(agent_id)
     if not agent:
         abort(404)
     return render_template('agent/_agent_console.html', agent=agent)
+
+
+@agent_bp.route('/monitor/<agent_id>/')
+def agent_monitor(agent_id):
+    agent = Agent.query.get(agent_id)
+    if not agent:
+        abort(404)
+    return render_template('agent/_agent_monitor.html', agent=agent)
 
 
 @agent_bp.route('/uploads/<path:path>')
