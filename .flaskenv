@@ -1,3 +1,3 @@
 FLASK_APP=shadow
-FLASK_ENV=development
+FLASK_ENV=production
 
